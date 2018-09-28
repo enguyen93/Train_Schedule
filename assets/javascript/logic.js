@@ -4,10 +4,10 @@ var config = {
     authDomain: "trainschedule-35128.firebaseapp.com",
     databaseURL: "https://trainschedule-35128.firebaseio.com",
     projectId: "trainschedule-35128",
-    storageBucket: "",
+    storageBucket: "trainschedule-35128.appspot.com",
     messagingSenderId: "915094527989"
-};
-firebase.initializeApp(config);
+  };
+  firebase.initializeApp(config);
 
 var database = firebase.database();
 
@@ -15,15 +15,6 @@ var trainNameInput = $("#trainNameInput").val().trim();
 var destinationInput = $("#destinationInput").val().trim();
 var trainTimeInput = $("#trainTimeInput").val().trim();
 var frequencyInput = $("#frequencyInput").val().trim();
-var minutesAwayInput = $("#minutesAwayInput").val().trim();
-
-var newTrain = {
-    train: trainNameInput,
-    destination: destinationInput,
-    time: trainTimeInput,
-    frequency: frequencyInput,
-    minutes: minutesAwayInput
-}
 
 
 $("#submit-Btn").on("click", function (event) {
@@ -34,50 +25,50 @@ $("#submit-Btn").on("click", function (event) {
     destinationInput = $("#destinationInput").val().trim();
     trainTimeInput = $("#trainTimeInput").val().trim();
     frequencyInput = $("#frequencyInput").val().trim();
-    minutesAwayInput = $("#minutesAwayInput").val().trim();
-
     // Code for "Setting values in the database"
     database.ref().push({
         train: trainNameInput,
         destination: destinationInput,
-        time: trainTimeInput,
+        arrivalTime: trainTimeInput,
         frequency: frequencyInput,
-        minutes: minutesAwayInput
+        // minutesAway: trainMinutes
     });
-
+    $("#trainNameInput").val("");
+    $("#destinationInput").val("");
+    $("#trainTimeInput").val("");
+    $("#frequencyInput").val("");
 });
 
 database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function (snapshot) {
     // storing the snapshot.val() in a variable for convenience
     var sv = snapshot.val();
+    var arrivalTime = sv.arrivalTime;
+    var arrivalTimePretty = moment.unix(arrivalTime).format("HH/mm");
+    console.log(moment().diff(moment(arrivalTime).toNow(), "hours", "minutes"));
 
-    // Console.loging the last user's data
+    // Console.logging the last user's data
     console.log(sv.train);
     console.log(sv.destination);
-    console.log(sv.time);
+    console.log(sv.arrivalTime);
     console.log(sv.frequency);
-    console.log(sv.minutes)
-    // Change the HTML to reflect
-    $("#trainDisplay").text(sv.train);
-    $("#destinationDisplay").text(sv.destination);
-    $("#timeDisplay").text(sv.time);
-    $("#frequencyDisplay").text(sv.frequency);
-    $("#minutesAwayDisplay").text(sv.minutes);
+    console.log(sv.minutesAway);
+
+    
+
+
+    var newRow = $("<tr>").append(
+        $("<td>").text(sv.train),
+        $("<td>").text(sv.destination),
+        $("<td>").text(sv.frequency),
+        $("<td>").text(sv.arrivalTimePretty),
+        $("<td>").text(sv.minutesAway)
+      );
+      $(".trainTable > tbody").append(newRow);
 
     // Handle the errors
 }, function (errorObject) {
     console.log("Errors handled: " + errorObject.code);
 });
 
-var newRow =
-    $('<tr>' +
-        '<td>' + database.train + '</td>' +
-        '<td>' + database.destination + '</td>' +
-        '<td>' + database.time + '</td>' +
-        '<td>' + database.frequency + '</td>' +
-        '<td>' + database.minutes + '</td>' +
-        '</tr>');
-$(".classBody").append(newRow);
 
 
-$('.table> tbody:last').append(newRow);
