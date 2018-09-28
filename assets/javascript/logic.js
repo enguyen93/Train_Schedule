@@ -44,9 +44,9 @@ $("#submit-Btn").on("click", function (event) {
     $("#frequencyInput").val("");
 });
 
-database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function (snapshot) {
+database.ref().on("child_added", function (childSnapshot) {
     // storing the snapshot.val() in a variable for convenience
-    var sv = snapshot.val();
+    var sv = childSnapshot.val();
 
     var firebaseName = sv.train;
     var firebaseDest = sv.destination;
@@ -57,10 +57,13 @@ database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", functi
 
     var tRemainder = moment().diff(moment.unix(firebaseArrivalTime), "minutes") % firebaseFrequency;
     console.log(tRemainder);
+    
     var minutesAway = firebaseFrequency - tRemainder;
     console.log(minutesAway);
+
     var tArrival = moment().add(minutesAway, "m").format("hh:mm");
     console.log(tArrival);
+
     // Console.logging the last user's data
     console.log(sv.train);
     console.log(sv.destination);
