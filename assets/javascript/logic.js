@@ -1,4 +1,4 @@
-
+// Initializing Firebase
 var config = {
     apiKey: "AIzaSyAssPA5eJz5wac93wgzY9IbDeCi8H-uRKk",
     authDomain: "trainschedule-35128.firebaseapp.com",
@@ -8,23 +8,17 @@ var config = {
     messagingSenderId: "915094527989"
 };
 firebase.initializeApp(config);
-
+// Variable to call on firebase
 var database = firebase.database();
-
-var trainNameInput = $("#trainNameInput").val().trim();
-var destinationInput = $("#destinationInput").val().trim();
-var trainTimeInput = $("#trainTimeInput").val().trim();
-var frequencyInput = $("#frequencyInput").val().trim();
-
+// All the things that happen when you click on the submit button
 $("#submit-Btn").on("click", function (event) {
     event.preventDefault();
 
     // Grabbed values from text-boxes
     trainNameInput = $("#trainNameInput").val().trim();
     destinationInput = $("#destinationInput").val().trim();
-    trainTimeInput = $("#trainTimeInput").val().trim(), "HH:mm".subtract(10, "years").format("X");
+    trainTimeInput = $("#trainTimeInput").val().trim();
     frequencyInput = $("#frequencyInput").val().trim();
-
 
     // Creates local "temporary" object for holding employee data
     var newTrain = {
@@ -34,44 +28,40 @@ $("#submit-Btn").on("click", function (event) {
         frequency: frequencyInput,
     };
 
-
     // Code for "Setting values in the database"
     database.ref().push(newTrain);
-        
-    $("#trainNameInput").val("");
-    $("#destinationInput").val("");
-    $("#trainTimeInput").val("");
-    $("#frequencyInput").val("");
+    // Clearing the forms 
+    $("#trainNameInput, #destinationInput, #trainTimeInput, #frequencyInput").val("");
+    
 });
 
 database.ref().on("child_added", function (childSnapshot) {
     // storing the snapshot.val() in a variable for convenience
     var sv = childSnapshot.val();
-
+    // Creating variables to call on for math functions and to append to Holder
     var firebaseName = sv.train;
     var firebaseDest = sv.destination;
     var firebaseArrivalTime = sv.arrivalTime;
     var firebaseFrequency = sv.frequency;
-
-
-
-    var tRemainder = moment().diff(moment.unix(firebaseArrivalTime), "minutes") % firebaseFrequency;
-    console.log(tRemainder);
-    
+    // Math to get the time converted
+    var startTimeConverted = moment(firebaseArrivalTime, "hh:mm").subtract(1, "years");
+    // Finding the difference in time in minutes
+    var diffTime = moment().diff(moment(startTimeConverted), "minutes");
+    var tRemainder = diffTime % firebaseFrequency;
     var minutesAway = firebaseFrequency - tRemainder;
-    console.log(minutesAway);
 
-    var tArrival = moment().add(minutesAway, "m").format("hh:mm");
-    console.log(tArrival);
+    // Next Train
+    var nextTrain = moment().add(minutesAway, "minutes");
+    var tArrival = moment(nextTrain).format("HH:mm");
 
     // Console.logging the last user's data
     console.log(sv.train);
     console.log(sv.destination);
     console.log(sv.arrivalTime);
     console.log(sv.frequency);
-    console.log(sv.minutesAway);
+    console.log(minutesAway);
 
-
+    //Creating and appending to the Holder
     var newRow = $("<tr>").append(
         $("<td>").text(firebaseName),
         $("<td>").text(firebaseDest),
@@ -85,6 +75,3 @@ database.ref().on("child_added", function (childSnapshot) {
 }, function (errorObject) {
     console.log("Errors handled: " + errorObject.code);
 });
-
-
-

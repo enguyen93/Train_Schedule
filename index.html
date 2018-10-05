@@ -6,17 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Train Schedule</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
 </head>
 
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-
-
+    <div class="mainContainer">
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-4">Anytime is Train Time</h1>
@@ -25,14 +25,30 @@
     </div>
 
     <br>
+    
+    <div id="clockHolder" class="d-flex justify-content-center">
+        <div class="col-md-3">
+            <div class="card bg-dark text-white">
+                <h3 class="card-title text-center">
+                    <div class="d-flex flex-wrap justify-content-center mt-2">
+                        <a><span class="badge hours"></span></a> :
+                        <a><span class="badge min"></span></a> :
+                        <a><span class="badge sec"></span></a>
+                    </div>
+                </h3>
+            </div>
+        </div>
+    </div>
 
-    <table class="trainTable">
+    <br>
+    
+    <table class="trainTable" class="d-flex justify-content-center">
         <thead>
             <tr>
                 <th scope="col">Train Name</th>
                 <th scope="col">Destination</th>
                 <th scope="col">Frequency (min)</th>
-                <th scope="col">Next Arrival</th>                
+                <th scope="col">Next Arrival</th>
                 <th scope="col">Minutes Away</th>
 
             </tr>
@@ -46,11 +62,11 @@
                 <td id="minutesAwayDisplay"></td>
             </tr>
 
-
         </tbody>
     </table>
     <br>
-    <div class="addTrainHolder">Add Train
+
+    <div class="addTrainHolder" class="d-flex justify-content-center">Add Train
         <form>
             <div class="form-group">
                 <label for="formGroupExampleInput">Train Name</label>
@@ -73,6 +89,7 @@
         <input class="btn btn-primary" id="submit-Btn" type="submit" value="Submit">
 
     </div>
+</div>
     <script src="assets/javascript/logic.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -80,6 +97,24 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                var hours = new Date().getHours();
+                $(".hours").html((hours < 10 ? "0" : "") + hours);
+            }, 1000);
+            setInterval(function () {
+                var minutes = new Date().getMinutes();
+                $(".min").html((minutes < 10 ? "0" : "") + minutes);
+            }, 1000);
+            setInterval(function () {
+                var seconds = new Date().getSeconds();
+                $(".sec").html((seconds < 10 ? "0" : "") + seconds);
+            }, 1000);
+        });
+        //Credit to BootstrapTema for the sick clock
+        //https://embed.plnkr.co/z7205R/
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,29 @@
+.jumbotron{
+    margin-top: 10px;
+    text-align: center;
+    background-image: url("../Images/shin.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto;
+    border-radius: 15px;
+}
+
+.display-4, .lead{
+    font-size: 5em;
+    font-weight: bold;
+}
+
+.addTrainHolder {
+    justify-content: center;
+}
+
+.mainContainer{
+    padding-right: 25px;
+    padding-left: 25px;
+    
+}
+
+.trainTable{
+    width: 100%;
+    text-align: center;
+}
